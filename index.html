@@ -1,92 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>For You ❤️</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>For You ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(to top, #ffdde1, #ee9ca7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: "Comic Sans MS", cursive;
-      overflow: hidden;
-      position: relative;
-    }
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(to top, #ffdde1, #ee9ca7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Comic Sans MS", cursive;
+  overflow: hidden;
+  position: relative;
+}
 
-    .container {
-      text-align: center;
-      z-index: 2;
-    }
+/* Container */
+.container {
+  text-align: center;
+  z-index: 2;
+  width: 100%;
+}
 
-    h1 {
-      animation: pop 1s ease-in-out;
-    }
+/* Question */
+h1 {
+  margin-bottom: 80px;
+  animation: pop 0.8s ease;
+}
 
-    @keyframes pop {
-      0% { transform: scale(0); }
-      100% { transform: scale(1); }
-    }
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
 
-    button {
-      font-size: 22px;
-      padding: 15px 30px;
-      border-radius: 30px;
-      border: none;
-      cursor: pointer;
-      margin: 10px;
-      transition: 0.3s;
-    }
+/* Buttons */
+button {
+  font-size: 22px;
+  padding: 15px 30px;
+  border-radius: 40px;
+  border: none;
+  cursor: pointer;
+  margin: 10px;
+  transition: all 0.4s ease;
+}
 
-    #yes {
-      background: #ff4d6d;
-      color: white;
-    }
+/* YES button shiny */
+#yes {
+  background: linear-gradient(45deg, #ff4d6d, #ff85a1);
+  color: white;
+  box-shadow: 0 0 20px rgba(255,77,109,0.7);
+  animation: glow 2s infinite alternate;
+}
 
-    #no {
-      background: #555;
-      color: white;
-      position: absolute;
-    }
+@keyframes glow {
+  from { box-shadow: 0 0 10px #ff4d6d; }
+  to { box-shadow: 0 0 25px #ff85a1; }
+}
 
-    /* Floating hearts */
-    .heart {
-      position: absolute;
-      font-size: 22px;
-      animation: floatUp linear infinite;
-      opacity: 0.8;
-      z-index: 1;
-    }
+/* NO button */
+#no {
+  background: #555;
+  color: white;
+  position: absolute;
+}
 
-    @keyframes floatUp {
-      from { transform: translateY(100vh); }
-      to { transform: translateY(-10vh); }
-    }
+/* Floating hearts */
+.heart {
+  position: absolute;
+  font-size: 22px;
+  animation: floatUp linear infinite;
+  opacity: 0.8;
+  z-index: 1;
+}
 
-    /* Bunny */
-    .bunny {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      font-size: 40px;
-      animation: hop 2s infinite;
-      z-index: 2;
-    }
+@keyframes floatUp {
+  from { transform: translateY(100vh); }
+  to { transform: translateY(-10vh); }
+}
 
-    @keyframes hop {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-20px); }
-    }
-  </style>
+/* Bunny */
+.bunny {
+  position: absolute;
+  font-size: 45px;
+  transition: left 0.6s ease, top 0.6s ease;
+  z-index: 2;
+}
+
+/* Celebration */
+.celebrate {
+  text-align: center;
+  animation: pop 1s ease;
+}
+
+.dance {
+  font-size: 80px;
+  animation: dance 0.6s infinite alternate;
+}
+
+@keyframes dance {
+  from { transform: rotate(-10deg); }
+  to { transform: rotate(10deg); }
+}
+</style>
 </head>
 
 <body>
 
-<div class="bunny">🐰</div>
+<div class="bunny" id="bunny">🐰</div>
 
 <div class="container">
   <h1 id="question">Do you still love me? 💖</h1>
@@ -95,50 +118,71 @@
 </div>
 
 <script>
-  /* Floating hearts */
-  setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerText = "❤️";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.animationDuration = (3 + Math.random() * 3) + "s";
-    document.body.appendChild(heart);
+/* Floating hearts */
+setInterval(() => {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+  document.body.appendChild(heart);
+  setTimeout(() => heart.remove(), 6000);
+}, 350);
 
-    setTimeout(() => heart.remove(), 6000);
-  }, 400);
+/* Logic */
+const noTexts = [
+  "Are you really sure? 🥺",
+  "That hurts a little 💔",
+  "Please think again 😭",
+  "My bunny is sad 🐰💔",
+  "Okay I’m panicking 😰",
+  "I’ll bring chocolates 🍫",
+  "I’ll say sorry forever 😭❤️",
+  "PLEASE 😭😭😭"
+];
 
-  /* Button logic */
-  let noCount = 0;
-  const no = document.getElementById("no");
-  const yes = document.getElementById("yes");
-  const q = document.getElementById("question");
+const colors = [
+  "#ff4d6d", "#ff85a1", "#ff6f91", "#ffc75f", "#f9a1bc"
+];
 
-  const texts = [
-    "Are you really sure? 🥺",
-    "My heart hurts 💔",
-    "Okay… this is serious 😭",
-    "Please don’t break my heart 🥹",
-    "I’ll do anything 😭❤️"
-  ];
+let noCount = 0;
+const no = document.getElementById("no");
+const yes = document.getElementById("yes");
+const q = document.getElementById("question");
+const bunny = document.getElementById("bunny");
 
-  no.addEventListener("click", () => {
-    noCount++;
-    q.innerText = texts[Math.min(noCount, texts.length - 1)];
+no.addEventListener("click", () => {
+  q.innerText = noTexts[noCount % noTexts.length];
+  noCount++;
 
-    no.style.left = Math.random() * 80 + "vw";
-    no.style.top = Math.random() * 80 + "vh";
-    yes.style.transform = `scale(${1 + noCount * 0.35})`;
-  });
+  /* Move NO */
+  const x = Math.random() * 80;
+  const y = Math.random() * 70;
+  no.style.left = x + "vw";
+  no.style.top = y + "vh";
 
-  yes.addEventListener("click", () => {
-    document.body.innerHTML = `
-      <div style="text-align:center; z-index:2;">
-        <h1>I’m really sorry ❤️</h1>
-        <h2>You mean the world to me 🐰💖</h2>
-        <p>Thank you for loving me 🥹</p>
-      </div>
-    `;
-  });
+  /* YES grows but text stays visible */
+  yes.style.transform = `scale(${1 + noCount * 0.25})`;
+
+  /* YES color changes */
+  yes.style.background = `linear-gradient(45deg, ${colors[noCount % colors.length]}, #ff85a1)`;
+
+  /* Bunny chases NO */
+  bunny.style.left = x + 5 + "vw";
+  bunny.style.top = y + 5 + "vh";
+});
+
+yes.addEventListener("click", () => {
+  document.body.innerHTML = `
+    <div class="celebrate">
+      <h1>YAYYYYY!!! 🎉💖</h1>
+      <div class="dance">🐰💃🐰</div>
+      <h2>I’m really really sorry 😭❤️</h2>
+      <p>You are my happiest place 🥹</p>
+      <p>Thank you for loving me 💕</p>
+    </div>
+  `;
+});
 </script>
 
 </body>
