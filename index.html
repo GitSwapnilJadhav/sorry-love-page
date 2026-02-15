@@ -2,227 +2,187 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>For You ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do You Still Love Me?</title>
 
 <style>
-body{
-  margin:0;
-  height:100vh;
-  overflow:hidden;
-  font-family:"Comic Sans MS",cursive;
-  background:linear-gradient(to top,#ffdde1,#ee9ca7);
-  position:relative;
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
-/* Main container */
-.container{
-  position:absolute;
-  top:18%;
-  width:100%;
-  text-align:center;
-  z-index:5;
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-h1{
-  padding:0 20px;
-  font-size:26px;
-  margin-bottom:40px;
+.container {
+  width: 100%;
+  max-width: 390px;
+  padding: 20px;
+  text-align: center;
+  z-index: 2;
 }
 
-/* Buttons */
-button{
-  font-size:18px;
-  padding:14px 26px;
-  border-radius:40px;
-  border:none;
-  cursor:pointer;
-  margin:8px;
-  transition:all .4s ease;
+h1 {
+  color: #d6336c;
+  font-size: 26px;
+  min-height: 80px;
+  transition: 0.3s;
 }
 
-/* YES button */
-#yes{
-  background:linear-gradient(45deg,#ff4d6d,#ff9aa2);
-  color:white;
-  box-shadow:0 0 25px rgba(255,77,109,.7);
-  transform-origin:center bottom;
-  animation:glow 2s infinite alternate;
+.buttons {
+  position: relative;
+  height: 180px;
 }
 
-@keyframes glow{
-  from{box-shadow:0 0 15px #ff4d6d;}
-  to{box-shadow:0 0 35px #ff9aa2;}
+button {
+  border: none;
+  padding: 14px 28px;
+  font-size: 18px;
+  border-radius: 40px;
+  cursor: pointer;
+  position: absolute;
+  transition: all 0.3s ease;
 }
 
-/* NO button */
-#no{
-  background:#444;
-  color:white;
-  position:absolute;
+#yesBtn {
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(45deg, #ff4d6d, #ff8fab);
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
 }
 
-/* Floating hearts */
-.heart{
-  position:absolute;
-  font-size:20px;
-  animation:floatUp linear infinite;
-  opacity:.8;
+#noBtn {
+  background: white;
+  color: #555;
+  border: 2px solid #ff4d6d;
 }
 
-@keyframes floatUp{
-  from{transform:translateY(110vh);}
-  to{transform:translateY(-10vh);}
+/* Bunny (SVG-based, native look) */
+.bunny {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 80px;
+  height: 80px;
+  animation: hop 1.2s infinite ease-in-out;
+  transition: left 0.6s ease, top 0.6s ease;
+  z-index: 2;
 }
 
-/* Bunny */
-.bunny{
-  position:absolute;
-  font-size:48px;
-  transition:left .6s ease, top .6s ease;
-  z-index:4;
+@keyframes hop {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-15px); }
 }
 
-/* Fireworks */
-.firework{
-  position:absolute;
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:transparent;
-  animation:explode 1s ease-out forwards;
+/* FULL SCREEN CELEBRATION */
+.celebration {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  display: none;
+  z-index: 1;
 }
 
-@keyframes explode{
-  to{
-    box-shadow:
-      0 0 20px #ff4d6d,
-      30px -30px #ffd93d,
-      -30px -30px #6bcf63,
-      30px 30px #4d96ff,
-      -30px 30px #ff85a1;
-    opacity:0;
-  }
+.heart {
+  position: absolute;
+  font-size: 30px;
+  animation: fall 4s linear infinite;
 }
 
-/* Celebration */
-.celebrate{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  background:radial-gradient(circle,#ffdde1,#ee9ca7);
-  z-index:10;
-}
-
-.dance{
-  font-size:90px;
-  animation:dance .5s infinite alternate;
-}
-
-@keyframes dance{
-  from{transform:rotate(-10deg);}
-  to{transform:rotate(10deg);}
+@keyframes fall {
+  from { transform: translateY(-10vh); opacity: 1; }
+  to { transform: translateY(110vh); opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- 🎵 MUSIC (your uploaded file) -->
-<audio id="bgMusic" autoplay loop>
+<div class="container">
+  <h1 id="question">Do you still love me? 💖</h1>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes 💕</button>
+    <button id="noBtn">No 😢</button>
+  </div>
+</div>
+
+<!-- Bunny SVG (web-native, smooth) -->
+<svg class="bunny" id="bunny" viewBox="0 0 100 100">
+  <circle cx="50" cy="60" r="25" fill="#fff"/>
+  <circle cx="40" cy="55" r="4"/>
+  <circle cx="60" cy="55" r="4"/>
+  <ellipse cx="35" cy="25" rx="6" ry="18" fill="#fff"/>
+  <ellipse cx="65" cy="25" rx="6" ry="18" fill="#fff"/>
+</svg>
+
+<!-- Celebration Layer -->
+<div class="celebration" id="celebration"></div>
+
+<audio id="music" loop>
   <source src="Tu Hain Toh Mr And Mrs Mahi 320 Kbps.mp3" type="audio/mpeg">
 </audio>
 
-<div class="bunny" id="bunny">🐰</div>
-
-<div class="container">
-  <h1 id="question">Do you still love me? 💖</h1>
-  <button id="yes">Yes 💕</button>
-  <button id="no">No 😒</button>
-</div>
-
 <script>
-/* Music autoplay logic */
-const music = document.getElementById("bgMusic");
-music.muted = true;
-music.play().catch(()=>{});
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const question = document.getElementById("question");
+const bunny = document.getElementById("bunny");
+const music = document.getElementById("music");
+const celebration = document.getElementById("celebration");
 
-document.addEventListener("click",()=>{
-  music.muted = false;
-  music.play().catch(()=>{});
-},{ once:true });
-
-/* Floating hearts */
-setInterval(()=>{
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerText="❤️";
-  h.style.left=Math.random()*100+"vw";
-  h.style.animationDuration=(4+Math.random()*3)+"s";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),7000);
-},400);
-
-/* Text logic */
-const texts=[
-  "Are you really sure? 🥺",
+let noCount = 0;
+const texts = [
+  "Are you sure? 🥺",
   "That hurts 💔",
-  "Please think again 😭",
-  "Bunny is worried 🐰",
-  "I’ll fix everything 🥹",
-  "Please don’t say no 😢",
-  "I love you so much ❤️",
-  "I need you 😭❤️"
+  "Bunny is begging 🐰",
+  "Pleaseee 💞",
+  "I love you 😭"
 ];
 
-let count=0;
-const yes=document.getElementById("yes");
-const no=document.getElementById("no");
-const q=document.getElementById("question");
-const bunny=document.getElementById("bunny");
+noBtn.addEventListener("click", () => {
+  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
+  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
 
-no.addEventListener("click",()=>{
-  q.innerText=texts[count % texts.length];
-  count++;
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
 
-  const x=Math.random()*75;
-  const y=45+Math.random()*30;
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 
-  no.style.left=x+"vw";
-  no.style.top=y+"vh";
+  bunny.style.left = Math.max(0, x - 60) + "px";
+  bunny.style.top = Math.max(0, y - 80) + "px";
 
-  yes.style.transform=`scale(${1+count*.12})`;
-  yes.style.background=`linear-gradient(45deg,
-    hsl(${count*40%360},80%,65%),
-    #ff9aa2)`;
-
-  bunny.style.left=(x+5)+"vw";
-  bunny.style.top=(y-8)+"vh";
+  question.textContent = texts[noCount % texts.length];
+  noCount++;
 });
 
-yes.addEventListener("click",()=>{
-  navigator.vibrate?.([200,100,200]);
+yesBtn.addEventListener("click", () => {
+  music.play();
+  navigator.vibrate(300);
 
-  document.body.innerHTML=`
-    <div class="celebrate">
-      <h1>YAYYYYY ❤️🎉</h1>
-      <div class="dance">🐰❤️🐰</div>
-      <h2>You said YES!!!</h2>
-      <p>I love you endlessly 🥹</p>
-    </div>
-  `;
+  question.textContent = "YAY!!! I LOVE YOU TOO 🫂💖🐰";
+  noBtn.style.display = "none";
 
-  for(let i=0;i<40;i++){
-    const f=document.createElement("div");
-    f.className="firework";
-    f.style.left=Math.random()*100+"vw";
-    f.style.top=Math.random()*100+"vh";
-    document.body.appendChild(f);
-    setTimeout(()=>f.remove(),1200);
+  celebration.style.display = "block";
+
+  // Generate LOTS of hearts
+  for (let i = 0; i < 120; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.textContent = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = 3 + Math.random() * 3 + "s";
+    celebration.appendChild(heart);
   }
 });
 </script>
