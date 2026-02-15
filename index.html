@@ -1,10 +1,88 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>For You ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(to top, #ffdde1, #ee9ca7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Comic Sans MS", cursive;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+    }
+    h1 {
+      animation: pop 1s ease-in-out;
+    }
+    @keyframes pop {
+      0% { transform: scale(0); }
+      100% { transform: scale(1); }
+    }
+    button {
+      font-size: 22px;
+      padding: 15px 30px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      margin: 10px;
+      transition: 0.3s;
+    }
+    #yes {
+      background: #ff4d6d;
+      color: white;
+    }
+    #no {
+      background: #555;
+      color: white;
+      position: absolute;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello ❤️</h1>
-  <p>If you are seeing this, the page works 😊</p>
+
+<div class="container">
+  <h1 id="question">Do you still love me? 💖</h1>
+  <button id="yes">Yes 💕</button>
+  <button id="no">No 😒</button>
+</div>
+
+<script>
+  let noCount = 0;
+  const no = document.getElementById("no");
+  const yes = document.getElementById("yes");
+  const q = document.getElementById("question");
+
+  no.addEventListener("click", () => {
+    noCount++;
+    q.innerText = [
+      "Are you really sure? 🥺",
+      "My heart hurts 💔",
+      "Okay… this is serious 😭",
+      "Please don’t break my heart 🥹"
+    ][Math.min(noCount, 3)];
+
+    no.style.left = Math.random() * 80 + "vw";
+    no.style.top = Math.random() * 80 + "vh";
+    yes.style.transform = `scale(${1 + noCount * 0.3})`;
+  });
+
+  yes.addEventListener("click", () => {
+    document.body.innerHTML = `
+      <div class="container">
+        <h1>I’m really sorry ❤️</h1>
+        <p>You mean the world to me.</p>
+        <p>Please forgive me 🥹</p>
+      </div>
+    `;
+  });
+</script>
+
 </body>
 </html>
