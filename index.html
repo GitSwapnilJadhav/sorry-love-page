@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>For You ❤️</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       margin: 0;
@@ -14,17 +15,23 @@
       align-items: center;
       font-family: "Comic Sans MS", cursive;
       overflow: hidden;
+      position: relative;
     }
+
     .container {
       text-align: center;
+      z-index: 2;
     }
+
     h1 {
       animation: pop 1s ease-in-out;
     }
+
     @keyframes pop {
       0% { transform: scale(0); }
       100% { transform: scale(1); }
     }
+
     button {
       font-size: 22px;
       padding: 15px 30px;
@@ -34,18 +41,52 @@
       margin: 10px;
       transition: 0.3s;
     }
+
     #yes {
       background: #ff4d6d;
       color: white;
     }
+
     #no {
       background: #555;
       color: white;
       position: absolute;
     }
+
+    /* Floating hearts */
+    .heart {
+      position: absolute;
+      font-size: 22px;
+      animation: floatUp linear infinite;
+      opacity: 0.8;
+      z-index: 1;
+    }
+
+    @keyframes floatUp {
+      from { transform: translateY(100vh); }
+      to { transform: translateY(-10vh); }
+    }
+
+    /* Bunny */
+    .bunny {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 40px;
+      animation: hop 2s infinite;
+      z-index: 2;
+    }
+
+    @keyframes hop {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
   </style>
 </head>
+
 <body>
+
+<div class="bunny">🐰</div>
 
 <div class="container">
   <h1 id="question">Do you still love me? 💖</h1>
@@ -54,31 +95,47 @@
 </div>
 
 <script>
+  /* Floating hearts */
+  setInterval(() => {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "❤️";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (3 + Math.random() * 3) + "s";
+    document.body.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 6000);
+  }, 400);
+
+  /* Button logic */
   let noCount = 0;
   const no = document.getElementById("no");
   const yes = document.getElementById("yes");
   const q = document.getElementById("question");
 
+  const texts = [
+    "Are you really sure? 🥺",
+    "My heart hurts 💔",
+    "Okay… this is serious 😭",
+    "Please don’t break my heart 🥹",
+    "I’ll do anything 😭❤️"
+  ];
+
   no.addEventListener("click", () => {
     noCount++;
-    q.innerText = [
-      "Are you really sure? 🥺",
-      "My heart hurts 💔",
-      "Okay… this is serious 😭",
-      "Please don’t break my heart 🥹"
-    ][Math.min(noCount, 3)];
+    q.innerText = texts[Math.min(noCount, texts.length - 1)];
 
     no.style.left = Math.random() * 80 + "vw";
     no.style.top = Math.random() * 80 + "vh";
-    yes.style.transform = `scale(${1 + noCount * 0.3})`;
+    yes.style.transform = `scale(${1 + noCount * 0.35})`;
   });
 
   yes.addEventListener("click", () => {
     document.body.innerHTML = `
-      <div class="container">
+      <div style="text-align:center; z-index:2;">
         <h1>I’m really sorry ❤️</h1>
-        <p>You mean the world to me.</p>
-        <p>Please forgive me 🥹</p>
+        <h2>You mean the world to me 🐰💖</h2>
+        <p>Thank you for loving me 🥹</p>
       </div>
     `;
   });
