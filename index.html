@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Do You Still Love Me?</title>
+<title>For You ❤️</title>
 
 <style>
 * {
@@ -24,21 +24,21 @@ body {
 .container {
   width: 100%;
   max-width: 390px;
-  padding: 20px;
   text-align: center;
+  padding: 20px;
   z-index: 2;
 }
 
 h1 {
-  color: #d6336c;
+  min-height: 90px;
+  color: #c9184a;
   font-size: 26px;
-  min-height: 80px;
   transition: 0.3s;
 }
 
 .buttons {
   position: relative;
-  height: 180px;
+  height: 220px;
 }
 
 button {
@@ -48,10 +48,10 @@ button {
   border-radius: 40px;
   cursor: pointer;
   position: absolute;
-  transition: all 0.3s ease;
+  transition: transform 0.3s, left 0.4s, top 0.4s;
 }
 
-#yesBtn {
+#yes {
   left: 50%;
   transform: translateX(-50%);
   background: linear-gradient(45deg, #ff4d6d, #ff8fab);
@@ -59,42 +59,44 @@ button {
   box-shadow: 0 0 20px rgba(255, 77, 109, 0.8);
 }
 
-#noBtn {
+#no {
+  left: 50%;
+  top: 90px;
+  transform: translateX(-50%);
   background: white;
   color: #555;
   border: 2px solid #ff4d6d;
 }
 
-/* Bunny (SVG-based, native look) */
+/* Bunny */
 .bunny {
   position: fixed;
-  bottom: 20px;
+  width: 50px;
+  height: 50px;
   left: 20px;
-  width: 80px;
-  height: 80px;
-  animation: hop 1.2s infinite ease-in-out;
-  transition: left 0.6s ease, top 0.6s ease;
-  z-index: 2;
+  top: 70%;
+  z-index: 1;
+  animation: hop 1s infinite ease-in-out;
+  transition: left 0.4s ease, top 0.4s ease;
 }
 
 @keyframes hop {
   0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-15px); }
+  50% { transform: translateY(-10px); }
 }
 
-/* FULL SCREEN CELEBRATION */
+/* Celebration */
 .celebration {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  overflow: hidden;
   display: none;
-  z-index: 1;
+  z-index: 0;
 }
 
 .heart {
   position: absolute;
-  font-size: 30px;
+  font-size: 28px;
   animation: fall 4s linear infinite;
 }
 
@@ -111,21 +113,20 @@ button {
   <h1 id="question">Do you still love me? 💖</h1>
 
   <div class="buttons">
-    <button id="yesBtn">Yes 💕</button>
-    <button id="noBtn">No 😢</button>
+    <button id="yes">Yes 💕</button>
+    <button id="no">No 😢</button>
   </div>
 </div>
 
-<!-- Bunny SVG (web-native, smooth) -->
+<!-- Bunny SVG -->
 <svg class="bunny" id="bunny" viewBox="0 0 100 100">
   <circle cx="50" cy="60" r="25" fill="#fff"/>
-  <circle cx="40" cy="55" r="4"/>
-  <circle cx="60" cy="55" r="4"/>
-  <ellipse cx="35" cy="25" rx="6" ry="18" fill="#fff"/>
-  <ellipse cx="65" cy="25" rx="6" ry="18" fill="#fff"/>
+  <circle cx="42" cy="55" r="4"/>
+  <circle cx="58" cy="55" r="4"/>
+  <ellipse cx="38" cy="25" rx="6" ry="18" fill="#fff"/>
+  <ellipse cx="62" cy="25" rx="6" ry="18" fill="#fff"/>
 </svg>
 
-<!-- Celebration Layer -->
 <div class="celebration" id="celebration"></div>
 
 <audio id="music" loop>
@@ -133,25 +134,29 @@ button {
 </audio>
 
 <script>
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
 const question = document.getElementById("question");
 const bunny = document.getElementById("bunny");
 const music = document.getElementById("music");
 const celebration = document.getElementById("celebration");
 
-let noCount = 0;
+let count = 0;
 const texts = [
   "Are you sure? 🥺",
   "That hurts 💔",
-  "Bunny is begging 🐰",
-  "Pleaseee 💞",
+  "Bunny is sad 🐰",
+  "Please say yes 💞",
   "I love you 😭"
 ];
 
 noBtn.addEventListener("click", () => {
-  const maxX = window.innerWidth - noBtn.offsetWidth - 20;
-  const maxY = window.innerHeight - noBtn.offsetHeight - 20;
+  count++;
+
+  // Keep NO inside screen
+  const padding = 20;
+  const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+  const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
   const x = Math.random() * maxX;
   const y = Math.random() * maxY;
@@ -159,24 +164,28 @@ noBtn.addEventListener("click", () => {
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 
-  bunny.style.left = Math.max(0, x - 60) + "px";
-  bunny.style.top = Math.max(0, y - 80) + "px";
+  // Bunny chases NO
+  bunny.style.left = Math.max(0, x - 40) + "px";
+  bunny.style.top = Math.max(0, y - 60) + "px";
 
-  question.textContent = texts[noCount % texts.length];
-  noCount++;
+  // Text always updates
+  question.textContent = texts[count % texts.length];
+
+  // YES grows but text stays visible
+  yesBtn.style.transform = `translateX(-50%) scale(${1 + count * 0.15})`;
 });
 
 yesBtn.addEventListener("click", () => {
-  music.play();
+  // SAFARI SAFE audio start
+  music.play().catch(() => {});
+
   navigator.vibrate(300);
 
-  question.textContent = "YAY!!! I LOVE YOU TOO 🫂💖🐰";
-  noBtn.style.display = "none";
-
+  question.textContent = "YAY!!! I LOVE YOU 🫂💖🐰";
   celebration.style.display = "block";
 
-  // Generate LOTS of hearts
-  for (let i = 0; i < 120; i++) {
+  // Full-screen celebration
+  for (let i = 0; i < 140; i++) {
     const heart = document.createElement("div");
     heart.className = "heart";
     heart.textContent = "💖";
