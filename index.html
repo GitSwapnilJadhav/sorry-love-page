@@ -2,204 +2,325 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<title>For Girlfriend_name ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>For You ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: "Poppins", sans-serif;
+body{
+    margin:0;
+    overflow:hidden;
+    font-family:'Poppins',sans-serif;
+    background:black;
 }
 
-body {
-  margin: 0;
-  height: 100vh;
-  background: radial-gradient(circle at top, #ffe6eb, #ee9ca7);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;  /* THIS FIXES THE BUTTON */
 }
 
-.container {
-  max-width: 390px;
-  width: 100%;
-  text-align: center;
-  padding: 20px;
-  z-index: 2;
+
+.container{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+    z-index:10;
+    backdrop-filter:blur(20px);
+    background:rgba(255,255,255,0.08);
+    padding:40px;
+    border-radius:20px;
+    box-shadow:0 0 40px rgba(255,0,100,0.4);
+    width:85%;
+    max-width:400px;
 }
 
-h1 {
-  min-height: 90px;
-  color: #c9184a;
-  font-size: 26px;
+h1{
+    color:white;
+    font-weight:600;
+    font-size:24px;
+    text-shadow:0 0 20px pink;
+    transition:0.3s;
 }
 
-.buttons {
-  position: relative;
-  height: 240px;
+button{
+    font-size:18px;
+    padding:14px 28px;
+    margin:15px;
+    border:none;
+    border-radius:30px;
+    cursor:pointer;
 }
 
-button {
-  border: none;
-  padding: 14px 30px;
-  font-size: 18px;
-  border-radius: 40px;
-  cursor: pointer;
-  position: absolute;
-  transition: transform 0.35s ease;
+#yes{
+    background:linear-gradient(45deg,#ff0066,#ff66cc);
+    color:white;
+    box-shadow:0 0 20px #ff3399;
 }
 
-#yes {
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(45deg, #ff4d6d, #ff8fab);
-  color: white;
-  box-shadow: 0 0 25px rgba(255, 77, 109, 0.8);
+#yes:hover{
+    box-shadow:0 0 40px #ff66cc;
 }
 
-#no {
-  left: 50%;
-  top: 100px;
-  transform: translateX(-50%);
-  background: white;
-  border: 2px solid #ff4d6d;
-  color: #555;
+#no{
+    background:#6a00ff;
+    color:white;
+    box-shadow:0 0 20px #a64dff;
+    position:fixed;
 }
 
-/* 🐰 CSS Bunny */
-.bunny {
-  position: fixed;
-  width: 46px;
-  height: 46px;
-  background: #fff;
-  border-radius: 50%;
-  bottom: 80px;
-  left: 20px;
-  animation: hop 1s infinite ease-in-out;
-}
-
-.bunny::before,
-.bunny::after {
-  content: "";
-  position: absolute;
-  width: 10px;
-  height: 22px;
-  background: #fff;
-  border-radius: 10px;
-  top: -18px;
-}
-
-.bunny::before { left: 8px; transform: rotate(-10deg); }
-.bunny::after { right: 8px; transform: rotate(10deg); }
-
-@keyframes hop {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-/* Celebration */
-.celebration {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  display: none;
-}
-
-.heart, .sparkle {
-  position: absolute;
-  animation: fall 4s linear infinite;
-}
-
-.sparkle {
-  font-size: 20px;
-  animation-duration: 2s;
-}
-
-@keyframes fall {
-  from { transform: translateY(-10vh); opacity: 1; }
-  to { transform: translateY(110vh); opacity: 0; }
+#finalMessage{
+    display:none;
+    font-size:32px;
+    color:gold;
+    text-shadow:0 0 40px gold;
 }
 </style>
 </head>
 
 <body>
 
+<audio id="bgMusic" src="Tu Hain Toh Mr And Mrs Mahi 320 Kbps.mp3"></audio>
+
 <div class="container">
-  <h1 id="text">Do you still love me? 💖</h1>
-  <div class="buttons">
+    <h1 id="question"></h1>
     <button id="yes">Yes 💕</button>
-    <button id="no">No 😢</button>
-  </div>
+    <div id="finalMessage"></div>
 </div>
 
-<div class="bunny" id="bunny"></div>
-<div class="celebration" id="celebration"></div>
-
-<audio id="music" loop>
-  <source src="Tu Hain Toh Mr And Mrs Mahi 320 Kbps.mp3" type="audio/mpeg">
-</audio>
+<button id="no">No 💜</button>
 
 <script>
-const music = document.getElementById("music");
-const no = document.getElementById("no");
-const yes = document.getElementById("yes");
-const text = document.getElementById("text");
-const bunny = document.getElementById("bunny");
-const celebration = document.getElementById("celebration");
 
-let started = false;
-let count = 0;
-let nx = 0, ny = 0;
+/* ================= NAME VARIABLE ================= */
+const girlfriendName = "Rahul"; // <-- Replace ONCE here
+
+/* ================= INITIAL TEXT ================= */
+const question = document.getElementById("question");
+question.innerText = `${girlfriendName}… Do you still love me? 💖`;
+
+/* ================= MUSIC ON FIRST CLICK ================= */
+let musicStarted = false;
+document.body.addEventListener("click", () => {
+    if(!musicStarted){
+        document.getElementById("bgMusic").play();
+        musicStarted = true;
+    }
+}, {once:true});
+
+/* ================= NO BUTTON SETUP ================= */
+const noBtn = document.getElementById("no");
+
+/* Initial safe position */
+noBtn.style.left = (window.innerWidth/2 - 40) + "px";
+noBtn.style.top = (window.innerHeight/1.5) + "px";
 
 const messages = [
-  "Are you sure? 🥺",
-  "That hurts 💔",
-  "Bunny is begging 🐰",
-  "Please say yes 💞",
-  "I love you 😭"
+`${girlfriendName}… I’m panicking now 😰`,
+`Kanhaiya, this is really hurting me 💔`,
+`Why don’t you love me, ${girlfriendName}? 😭`,
+`My heart is breaking because of you, ${girlfriendName} 💔`,
+`Please don’t leave me, ${girlfriendName} 🥺`
 ];
 
-// Start music on FIRST tap anywhere
-document.body.addEventListener("click", () => {
-  if (!started) {
-    music.play().catch(()=>{});
-    started = true;
-  }
-}, { once: true });
+let noClickCount = 0;
 
-no.addEventListener("click", (e) => {
-  e.stopPropagation();
-  count++;
+function moveButtonSafely(){
 
-  const maxX = window.innerWidth - 100;
-  const maxY = window.innerHeight - 160;
+    const btnWidth = noBtn.offsetWidth;
+    const btnHeight = noBtn.offsetHeight;
 
-  nx = Math.random() * maxX;
-  ny = Math.random() * maxY;
+    const container = document.querySelector(".container");
+    const containerRect = container.getBoundingClientRect();
 
-  no.style.transform = `translate(${nx}px, ${ny}px)`;
-  bunny.style.left = Math.max(0, nx - 30) + "px";
-  bunny.style.top = Math.max(0, ny - 30) + "px";
+    const maxX = window.innerWidth - btnWidth - 20;
+    const maxY = window.innerHeight - btnHeight - 20;
 
-  text.textContent = messages[count % messages.length];
-  yes.style.transform = `translateX(-50%) scale(${1 + count * 0.12})`;
+    let newX, newY;
+    let safe = false;
+
+    while(!safe){
+        newX = Math.random() * maxX;
+        newY = Math.random() * maxY;
+
+        const overlaps =
+            newX < containerRect.right &&
+            newX + btnWidth > containerRect.left &&
+            newY < containerRect.bottom &&
+            newY + btnHeight > containerRect.top;
+
+        if(!overlaps){
+            safe = true;
+        }
+    }
+
+    gsap.to(noBtn,{
+        duration:0.4,
+        left:newX,
+        top:newY,
+        ease:"power2.out"
+    });
+}
+
+/* NO BUTTON CLICK */
+noBtn.addEventListener("click", () => {
+
+    if(noClickCount < messages.length){
+        question.innerText = messages[noClickCount];
+    } else {
+        question.innerText = `${girlfriendName}… please 😭💔`;
+    }
+
+    // Shake animation
+    gsap.fromTo(question,
+        {x:-10},
+        {x:10,duration:0.08,repeat:6,yoyo:true}
+    );
+
+    // Increase red glow
+    question.style.textShadow = `0 0 ${20 + noClickCount*8}px red`;
+
+    // Slight background darkening
+    document.body.style.background = `rgb(${Math.min(60,noClickCount*10)},0,0)`;
+
+    moveButtonSafely();
+    noClickCount++;
 });
 
-yes.addEventListener("click", () => {
-  navigator.vibrate(300);
-  text.textContent = "YAY!!! I LOVE YOU 🫂💖";
+/* ================= YES BUTTON ================= */
+const yesBtn = document.getElementById("yes");
+const finalMessage = document.getElementById("finalMessage");
 
-  celebration.style.display = "block";
+yesBtn.addEventListener("click",()=>{
+    question.style.display="none";
+    yesBtn.style.display="none";
+    noBtn.style.display="none";
+    finalMessage.innerText = `My heart belongs to you,💕${girlfriendName} ❤️`;
+    finalMessage.style.display="block";
+    launchFireworks();
+});
 
-  for (let i = 0; i < 150; i++) {
-    const el = document.createElement("div");
-    el.className = Math.random() > 0.6 ? "sparkle" : "heart";
-    el.textContent = el.className === "sparkle" ? "✨" : "💖";
-    el.style.left = Math.random() * 100 + "vw";
-    el.style.animationDuration = 2 + Math.random() * 3 + "s";
-    celebration.appendChild(el);
-  }
+//* ================= 3D SHINY FLOATING HEARTS ================= */
+
+const heartCanvas = document.createElement("canvas");
+document.body.appendChild(heartCanvas);
+const ctx = heartCanvas.getContext("2d");
+
+heartCanvas.width = window.innerWidth;
+heartCanvas.height = window.innerHeight;
+
+let hearts = [];
+
+for (let i = 0; i < 50; i++) {
+    hearts.push({
+        x: Math.random() * heartCanvas.width,
+        y: Math.random() * heartCanvas.height,
+        size: Math.random() * 18 + 12,
+        speed: Math.random() * 1.2 + 0.5,
+        shineOffset: Math.random() * 100
+    });
+}
+
+function drawHeart(x, y, size, shineOffset) {
+
+    const gradient = ctx.createRadialGradient(
+        x - size * 0.3,
+        y - size * 0.3,
+        size * 0.1,
+        x,
+        y,
+        size * 1.2
+    );
+
+    gradient.addColorStop(0, "#ff99aa");   // shine
+    gradient.addColorStop(0.3, "#ff003c"); // red
+    gradient.addColorStop(1, "#8b0000");   // dark red depth
+
+    ctx.fillStyle = gradient;
+    ctx.shadowColor = "rgba(255,0,60,0.8)";
+    ctx.shadowBlur = 15;
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.bezierCurveTo(x, y - size/2, x - size, y - size/2, x - size, y);
+    ctx.bezierCurveTo(x - size, y + size/2, x, y + size, x, y + size*1.5);
+    ctx.bezierCurveTo(x, y + size, x + size, y + size/2, x + size, y);
+    ctx.bezierCurveTo(x + size, y - size/2, x, y - size/2, x, y);
+    ctx.fill();
+
+    ctx.shadowBlur = 0;
+}
+
+function animateHearts() {
+    ctx.clearRect(0, 0, heartCanvas.width, heartCanvas.height);
+
+    hearts.forEach(h => {
+        h.y -= h.speed;
+
+        // slight floating sway
+        h.x += Math.sin(Date.now() * 0.001 + h.shineOffset) * 0.3;
+
+        if (h.y < -50) {
+            h.y = heartCanvas.height + 50;
+            h.x = Math.random() * heartCanvas.width;
+        }
+
+        drawHeart(h.x, h.y, h.size, h.shineOffset);
+    });
+
+    requestAnimationFrame(animateHearts);
+}
+
+animateHearts();
+
+
+/* ================= FIREWORKS ================= */
+let scene=new THREE.Scene();
+let camera=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+let renderer=new THREE.WebGLRenderer({alpha:true});
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.domElement.style.position="fixed";
+renderer.domElement.style.zIndex="5";
+document.body.appendChild(renderer.domElement);
+camera.position.z=5;
+
+function launchFireworks(){
+    const geometry=new THREE.BufferGeometry();
+    const vertices=[];
+    for(let i=0;i<700;i++){
+        vertices.push(
+            (Math.random()-0.5)*10,
+            (Math.random()-0.5)*10,
+            (Math.random()-0.5)*10
+        );
+    }
+    geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));
+    const material=new THREE.PointsMaterial({color:0xff66cc,size:0.1});
+    const points=new THREE.Points(geometry,material);
+    scene.add(points);
+
+    function animate(){
+        requestAnimationFrame(animate);
+        points.rotation.x+=0.01;
+        points.rotation.y+=0.01;
+        renderer.render(scene,camera);
+    }
+    animate();
+}
+
+/* ================= RESIZE FIX ================= */
+window.addEventListener("resize",()=>{
+    heartCanvas.width=window.innerWidth;
+    heartCanvas.height=window.innerHeight;
+    renderer.setSize(window.innerWidth,window.innerHeight);
+    camera.aspect=window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
 });
 </script>
 
